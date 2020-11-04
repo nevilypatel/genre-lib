@@ -1,5 +1,3 @@
-package com;
-
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -14,27 +12,14 @@ import java.util.regex.Pattern;
 
 public class findAuthor {
 
-    public static void findAuthor(String cellString, String bookText, int i, int j) {
-        Pattern pattern = Pattern.compile(bookText.toLowerCase(), Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(cellString.toLowerCase());
-        boolean matchFound = matcher.find();
-        if (matchFound) {
-            findBook fbn = new findBook();
-            String Book = fbn.findBookbyAuthorname(i, j);
-            boolean Available0 = findAvailableBooks(i, j);
-            String Available = Available0 ? "Yes" : "No";
-            String Category = findCategory(i, j);
-            String Section = findSection(i, j);
-            System.out.println("/$----------------------------------------------------$/");
-            System.out.println("- Author: " + cellString + "\n- Book of Author: " + Book + "\n- Category of Book: " + Category + "\n- Section in Library: " + Section + "\n- Available: " + Available + "\n- Match found at => " + i + ":" + j);
-        }
-        //return 0;
-    }
+    private static boolean found;
 
     public static void findBookByAuthorName() {
 
+        bookDealer bd = new bookDealer();
+
         Scanner s1 = new Scanner(System.in);
-        System.out.print("Enter author Book you want to find: ");
+        System.out.print("Enter author of Book you want to find: ");
         String bookText = s1.nextLine();
         try {
             File file = new File("Author.xlsx");
@@ -59,6 +44,29 @@ public class findAuthor {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        System.out.println("/$----------------------------------------------------$/");
+        bd.bookDealerFun();
+
+    }
+
+    public static void findAuthor(String cellString, String bookText, int i, int j) {
+        Pattern pattern = Pattern.compile(bookText.toLowerCase(), Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(cellString.toLowerCase());
+        boolean matchFound = matcher.find();
+        if (matchFound) {
+            found = true;
+            findBook fbn = new findBook();
+            String Book = fbn.findBookbyAuthorname(i, j);
+            boolean Available0 = findAvailableBooks(i, j);
+            String Available = Available0 ? "Yes" : "No";
+            String Category = findCategory(i, j);
+            String Section = findSection(i, j);
+            System.out.println("/$----------------------------------------------------$/");
+            System.out.println("- Author: " + cellString + "\n- Book of Author: " + Book + "\n- Category of Book: " + Category + "\n- Section in Library: " + Section + "\n- Available: " + Available + "\n- Match found at => " + i + ":" + j);
+        } else if (i == 69 && j == 14 && !found) {
+            System.out.println("Book is not available in Library. ;(");
+        }
+        //return 0;
     }
 
     public static String findAuthorbyBookname(int i, int j) {
@@ -184,5 +192,4 @@ public class findAuthor {
         }
         return availability;
     }
-
 }
